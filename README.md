@@ -28,9 +28,13 @@ pip install pandas sqlalchemy psycopg2-binary phik matplotlib seaborn
 ### Структура проекта
 
 ├── data/
+
 │   └── final_tickets_tenge_df.csv   # Файл с курсами валют
+
 ├── src/
+
 │   └── processing.py                # Класс DataProcessor
+
 └── main.py                          # Главный скрипт запуска
 
 ### Запуск
