@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -5,20 +7,28 @@ import seaborn as sns
 import numpy as np
 import phik
 
+# Загружаем переменные окружения из файла .env
+load_dotenv()
+
 class DataProcessor:
     def __init__(self, csv_path='data/final_tickets_tenge_df.csv'):
         self.csv_path = csv_path
-        self.df = None          # Данные по заказам
-        self.tenge = None       # Курсы валют
-        self.profile = None     # Профиль пользователей
+        self.df = None          
+        self.tenge = None       
+        self.profile = None     
         
+        # Читаем доступы из окружения
         self.db_config = {
-            'user': 'praktikum_student',
-            'pwd': 'Sdf4$2;d-d30pp',
-            'host': 'rc1e-oa2gp4mf9egcsq5k.mdb.yandexcloud.net',
-            'port': 6432,
-            'db': 'data-analyst-afisha'
+            'user': os.getenv('DB_USER'),
+            'pwd': os.getenv('DB_PASSWORD'),
+            'host': os.getenv('DB_HOST'),
+            'port': os.getenv('DB_PORT', '6432'), # 6432 как запасной вариант
+            'db': os.getenv('DB_NAME')
         }
+
+    def load_from_sql(self):
+        """1. Загрузка первоначальных данных из БД с помощью SQL-запроса."""
+        # ... остальной код без изменений ...
 
     # ==========================================
     # 1. ЗАГРУЗКА И ПРЕДОБРАБОТКА ДАННЫХ (SQL)
