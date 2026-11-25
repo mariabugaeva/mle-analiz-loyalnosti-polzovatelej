@@ -222,8 +222,6 @@ class DataProcessor:
     def calculate_phik_correlation(self, target='order_id_count', plot=True):
         """
         Рассчитывает матрицу phi_k для выявления связей с количеством заказов.
-        :param target: 'order_id_count' (число заказов) или 'order_segment' (сегменты)
-        :param plot: отрисовывать ли тепловую карту
         """
         if self.profile is None:
             raise ValueError("Сначала вызовите build_user_profile()")
@@ -258,3 +256,13 @@ class DataProcessor:
         # Оставляем только корреляцию с целевым признаком
         target_corr = phik_corr.loc[phik_corr.index != target][[target]].sort_values(by=target, ascending=False)
         print(f"\nСвязь признаков с {target}:\n{target_corr.round(3)}")
+        
+        # Визуализация
+        if plot:
+            plt.figure(figsize=(4, 6))
+            sns.heatmap(target_corr, annot=True, fmt='.3f', cmap='coolwarm', linewidths=0.5, cbar=False)
+            plt.title(f'Тепловая карта phi_k для {target}')
+            plt.show()
+            
+        # ВОТ ЭТА СТРОКА ОБЯЗАТЕЛЬНА, ЧТОБЫ main.py МОГ ЗАБРАТЬ ДАННЫЕ
+        return target_corr 
