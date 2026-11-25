@@ -178,36 +178,42 @@ class DataProcessor:
         df_seg['share'] = df_seg['sum_is_two'] / df_seg['users_per_category']
         return df_seg.sort_values(by='share', ascending=False).reset_index(drop=True)
 
-    def check_hypotheses(self):
-        """Проверка Гипотезы 1 (Спорт vs Концерты) и Гипотезы 2 (Топ-10 регионов vs остальные)."""
-        if self.profile is None:
-            raise ValueError("Сначала вызовите build_user_profile()")
+        def check_hypotheses(self):
+
+            if self.profile is None:
+                raise ValueError("Сначала вызовите build_user_profile()")
+                
+            print("\n--- ПРОВЕРКА ГИПОТЕЗ ---")
             
-        print("\n--- ПРОВЕРКА ГИПОТЕЗ ---")
-        
-        # Гипотеза 1
-        sport_share = self.profile[self.profile['event_type_main_first'] == 'спорт']['is_two'].mean()
-        concert_share = self.profile[self.profile['event_type_main_first'] == 'концерты']['is_two'].mean()
-        print(f"Гипотеза 1 (Спорт vs Концерты):")
-        print(f"  - Доля возврата (спорт): {sport_share:.2%}")
-        print(f"  - Доля возврата (концерты): {concert_share:.2%}")
-        
-        # Гипотеза 2
-        region_stats = self.analyze_segment_retention('region_name_first')
-        region_stats = region_stats.sort_values(by='users_per_category', ascending=False).reset_index(drop=True)
-        
-        top_10 = region_stats.head(10)
-        others = region_stats.iloc[10:]
-        others = others[others['users_per_category'] >= 10] # Исключаем регионы с <10 юзерами
-        
-        top_share = top_10['sum_is_two'].sum() / top_10['users_per_category'].sum()
-        other_share = others['sum_is_two'].sum() / others['users_per_category'].sum()
-        
-        print(f"Гипотеза 2 (Крупные регионы vs Менее активные):")
-        print(f"  - Доля возврата в Топ-10 регионах: {top_share:.2%}")
-        print(f"  - Доля возврата в остальных (>=10 юзеров): {other_share:.2%}")
-        
-        return top_share, other_share
+            # Гипотеза 1
+            sport_share = self.profile[self.profile['event_type_main_first'] == 'спорт']['is_two'].mean()
+            concert_share = self.profile[self.profile['event_type_main_first'] == 'концерты']['is_two'].mean()
+            print(f"Гипотеза 1 (Спорт vs Концерты):")
+            print(f"  - Доля возврата (спорт): {sport_share:.2%}")
+            print(f"  - Доля возврата (концерты): {concert_share:.2%}")
+            
+            # Гипотеза 2
+            region_stats = self.analyze_segment_retention('region_name_first')
+            region_stats = region_stats.sort_values(by='users_per_category', ascending=False).reset_index(drop=True)
+            
+            top_10 = region_stats.head(10)
+            others = region_stats.iloc[10:]
+            others = others[others['users_per_category'] >= 10] 
+            
+            top_share = top_10['sum_is_two'].sum() / top_10['users_per_category'].sum()
+            other_share = others['sum_is_two'].sum() / others['users_per_category'].sum()
+            
+            print(f"Гипотеза 2 (Крупные регионы vs Менее активные):")
+            print(f"  - Доля возврата в Топ-10 регионах: {top_share:.2%}")
+            print(f"  - Доля возврата в остальных (>=10 юзеров): {other_share:.2%}")
+            
+            # ВОЗВРАЩАЕМ РЕЗУЛЬТАТЫ ДЛЯ ОТЧЕТА
+            return {
+                'sport_share': sport_share,
+                'concert_share': concert_share,
+                'top_region_share': top_share,
+                'other_region_share': other_share
+            }
 
 
     # ==========================================
