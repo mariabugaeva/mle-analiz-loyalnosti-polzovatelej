@@ -23,7 +23,13 @@
 ### Подготовка окружения
 Убедитесь, что у вас установлен Python 3.8+ и активировано виртуальное окружение. Установите необходимые зависимости:
 
-pip install pandas sqlalchemy psycopg2-binary phik matplotlib seaborn
+pip install pandas sqlalchemy psycopg2-binary phik matplotlib seaborn python-dotenv
+
+### Подготовка данных
+Для конвертации валют проекту необходим файл `final_tickets_tenge_df.csv`.
+1. Скачайте его по ссылке: https://code.s3.yandex.net/datasets/final_tickets_tenge_df.csv
+2. Положите скачанный файл в папку `data/` в корне проекта. 
+(Если папки `data/` нет — создайте её).
 
 ### Структура проекта
 
